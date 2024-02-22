@@ -1,59 +1,60 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerMovement : PlayerScript
 {
 
-    [Header("Movement")]
-    public float speed;
-    public float groundDrag;
-
-    public float jumpForce;
-    public float airMultiplier;
-
-    private bool readyToJump;
-
-    [Header("Ground Check")]
-    public float playerHeight;
-    public LayerMask groundMask;
-    public bool grounded;
-
-
-    public Transform orientation;
-
     private float horizontalInput;
     private float verticalInput;
 
+    [Header("Player Variable")]
+    public float speed;
+    public float jumpHeight = 3f;
+
+    public float gravity = -9.81f;
+    public float airMultiplier;
+
+    private bool readyToJump;
+    public bool grounded;
+
     private Vector3 moveDirection;
+    private Vector3 velocity;
 
-    private Rigidbody rb;
+    [Header("Ground Check")]
+    public LayerMask groundMask;
+    public float groundDistance = 0.4f;
+    public Transform groundCheck;
 
-    private void Start()
+    [Header("Other Object")]
+    public Transform orientation;
+    public CharacterController controller;
+
+    
+
+    // Start is called before the first frame update
+    void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
+        
     }
 
-    private void Update()
+    // Update is called once per frame
+    void Update()
     {
-
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f, groundMask);
+        //grounded = Physics.Raycast(transform.position, Vector3.down, 1 * 0.6f, groundMask);
+        grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         MyInput();
-        SpeedControl();
 
         if (grounded)
         {
-            rb.drag = groundDrag;
             readyToJump = true;
         }
         else
         {
-            rb.drag = 0;
             readyToJump = false;
         }
-
     }
 
     private void FixedUpdate()
@@ -77,35 +78,31 @@ public class PlayerMovement : PlayerScript
 
     private void MovePlayer()
     {
+
+        if (grounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
+
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-
-        if (grounded)
+        if (!grounded)
         {
-            rb.AddForce(moveDirection.normalized * speed * 5f, ForceMode.Force);
+            controller.Move(moveDirection.normalized * speed * airMultiplier * Time.deltaTime);
         }
-        else if (!grounded)
+        else
         {
-            rb.AddForce(moveDirection.normalized * speed * 5f * airMultiplier, ForceMode.Force);
+            controller.Move(moveDirection.normalized * speed * Time.deltaTime);
         }
-    }
 
-    private void SpeedControl()
-    {
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        velocity.y += gravity * Time.deltaTime;
 
-        if(flatVel.magnitude > speed)
-        {
-            Vector3 limitedVel = flatVel.normalized * speed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
-        }
+        controller.Move(velocity * Time.deltaTime);
+    
     }
 
     private void Jump()
     {
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        velocity.y = Mathf.Sqrt(jumpHeight * -gravity);
     }
-
 }
