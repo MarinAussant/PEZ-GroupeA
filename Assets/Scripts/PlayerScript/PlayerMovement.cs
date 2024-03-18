@@ -8,6 +8,7 @@ public class PlayerMovement : PlayerScript
 
     private float horizontalInput;
     private float verticalInput;
+    private bool jumpPressed;
 
     [Header("Player Variable")]
     public float speed;
@@ -18,6 +19,7 @@ public class PlayerMovement : PlayerScript
 
     private bool readyToJump;
     public bool grounded;
+    public bool inWater;
 
     private Vector3 moveDirection;
     private Vector3 velocity;
@@ -30,6 +32,7 @@ public class PlayerMovement : PlayerScript
     [Header("Other Object")]
     public Transform orientation;
     public CharacterController controller;
+    public CapsuleCollider capsuleCollider;
 
     
 
@@ -59,7 +62,15 @@ public class PlayerMovement : PlayerScript
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        if ((inWater))
+        {
+            MovePlayerWater();
+        }
+        else
+        {
+            MovePlayer();
+        }
+        
     }
 
     private void MyInput()
@@ -67,17 +78,25 @@ public class PlayerMovement : PlayerScript
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKeyDown(KeyCode.Space) && readyToJump && grounded)
+        if (Input.GetKey(KeyCode.Space))
         {
-            readyToJump = false;
-
-            Jump();
+            jumpPressed = true;
+        }
+        else
+        {
+            jumpPressed = false;
         }
 
     }
 
     private void MovePlayer()
     {
+
+        if(readyToJump && grounded && jumpPressed)
+        {
+            readyToJump = false;
+            Jump();
+        }
 
         if (grounded && velocity.y < 0)
         {
@@ -101,8 +120,68 @@ public class PlayerMovement : PlayerScript
     
     }
 
+    private void MovePlayerWater()
+    {
+        if (jumpPressed)
+        {
+            JumpWater();
+        }
+        else if (velocity.y > -0.5)
+        {
+            velocity.y -= Time.deltaTime;
+        }
+        else
+        {
+            velocity.y = -0.5f;
+        }
+
+        //Modifier pour que le rat avance dans la direction de la caméra et qu'appuyer sur Space lui donne simplement une impulsion verticale en plus
+        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+
+        if (!grounded)
+        {
+            controller.Move(moveDirection.normalized * speed * airMultiplier * Time.deltaTime);
+        }
+        else
+        {
+            controller.Move(moveDirection.normalized * speed * Time.deltaTime);
+        }
+
+        
+
+        controller.Move(velocity * Time.deltaTime);
+
+    }
+
     private void Jump()
     {
         velocity.y = Mathf.Sqrt(jumpHeight * -gravity);
     }
+
+    private void JumpWater()
+    {
+        velocity.y = Mathf.Sqrt(jumpHeight * 1f);
+    }
+
+    public void SetInWater(bool inWater)
+    {
+        this.inWater = inWater;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Water")
+        {
+            inWater = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Water")
+        {
+            inWater = false;
+        }
+    }
+
 }
