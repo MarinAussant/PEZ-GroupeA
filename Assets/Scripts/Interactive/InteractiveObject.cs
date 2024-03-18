@@ -3,14 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class InteractiveObject : MonoBehaviour
+public abstract class InteractiveObject : MonoBehaviour
 {
-    
-
 
     virtual public void Interact() { }
-
-
-
 
 }
