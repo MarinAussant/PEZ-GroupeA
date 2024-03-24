@@ -137,6 +137,9 @@ public class PlayerMovement : PlayerScript
 
         //Modifier pour que le rat avance dans la direction de la caméra et qu'appuyer sur Space lui donne simplement une impulsion verticale en plus
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        //Debug.Log(orientation.forward);
+        //moveDirection = orientation.forward * verticalInput;
+
 
         if (!grounded)
         {
@@ -146,8 +149,6 @@ public class PlayerMovement : PlayerScript
         {
             controller.Move(moveDirection.normalized * speed * Time.deltaTime);
         }
-
-        
 
         controller.Move(velocity * Time.deltaTime);
 
