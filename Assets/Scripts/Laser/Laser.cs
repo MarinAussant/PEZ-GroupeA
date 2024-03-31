@@ -6,26 +6,52 @@ using UnityEngine;
 
 public class Laser : MonoBehaviour
 {
+    [Header("Settings")]
+    public LayerMask mirorMask;
+    public float defaultLenght = 20;
+    public int numOfReflections = 2;
 
     private LineRenderer lineRenderer;
-    public Material material;
+    private RaycastHit hit;
+
+    private Ray ray;
+    private Vector3 direction;
 
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.positionCount = 4;
-        lineRenderer.material = material;
-        lineRenderer.startWidth = 0.01f;
-        lineRenderer.endWidth = 0.01f;
-        lineRenderer.SetPosition(0,transform.position);
-        lineRenderer.SetPosition(1, transform.position + transform.forward * 5);
-        lineRenderer.SetPosition(2, transform.position + Vector3.left  + transform.forward * 8);
-        lineRenderer.SetPosition(3, transform.position + Vector3.left * 3 + transform.forward * 10);
-
     }
 
     void Update()
     {
-        
+        LaserReflection();
+    }
+
+    private void LaserReflection()
+    {
+        ray = new Ray(transform.position, transform.forward);
+
+        lineRenderer.positionCount = 1; ;
+        lineRenderer.SetPosition(0, transform.position);
+
+        float remainLenght = defaultLenght;
+
+        for (int i = 0; i< numOfReflections; i++)
+        {
+            if(Physics.Raycast(ray.origin, ray.direction, out hit, remainLenght, mirorMask))
+            {
+                lineRenderer.positionCount += 1;
+                lineRenderer.SetPosition(lineRenderer.positionCount-1, hit.point);
+
+                remainLenght -= Vector3.Distance(ray.origin, hit.point);
+
+                ray = new Ray(hit.point, Vector3.Reflect(ray.direction, hit.normal));
+            }
+            else
+            {
+                lineRenderer.positionCount += 1;
+                lineRenderer.SetPosition(lineRenderer.positionCount-1, ray.origin + (ray.direction * remainLenght));
+            }
+        }
     }
 }
