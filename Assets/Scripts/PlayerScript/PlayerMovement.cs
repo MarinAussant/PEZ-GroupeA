@@ -6,18 +6,27 @@ using UnityEngine.EventSystems;
 public class PlayerMovement : PlayerScript
 {
 
-    private float horizontalInput;
-    private float verticalInput;
-    private bool jumpPressed;
+    [Header("Player Movement")]
 
-    [Header("Player Variable")]
     public float speed;
+    
+    // Jump
     public float jumpHeight = 3f;
+    public float minLongJumpTime;
+    public float maxLongJumpTime;
 
     public float gravity = -9.81f;
     public float airMultiplier;
+    public float waterMultiplier;
 
     private bool readyToJump;
+
+    private float horizontalInput;
+    private float verticalInput;
+
+    private bool jumpPressed;
+    private float timeJumpPressed = 0;
+
     public bool grounded;
     public bool inWater;
 
@@ -49,6 +58,7 @@ public class PlayerMovement : PlayerScript
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         MyInput();
+        //Debug.Log(timeJumpPressed);
 
         if (grounded)
         {
@@ -57,6 +67,7 @@ public class PlayerMovement : PlayerScript
         else
         {
             readyToJump = false;
+            timeJumpPressed = 0;
         }
     }
 
@@ -78,14 +89,30 @@ public class PlayerMovement : PlayerScript
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKey(KeyCode.Space))
+        if(grounded)
         {
-            jumpPressed = true;
+            if (Input.GetKey(KeyCode.Space))
+            {
+                //Faire en sorte de bloquer les déplacement quand le joueur appuis sur espace (revoir l'archi du script)
+                timeJumpPressed += Time.deltaTime;
+            }
+
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                if (timeJumpPressed > minLongJumpTime)
+                {
+                    jumpPressed = true;
+                }
+
+                timeJumpPressed = 0;
+            }
         }
         else
         {
-            jumpPressed = false;
+            timeJumpPressed = 0;
         }
+
+       
 
     }
 
@@ -135,21 +162,11 @@ public class PlayerMovement : PlayerScript
             velocity.y = -0.5f;
         }
 
-        //Modifier pour que le rat avance dans la direction de la caméra et qu'appuyer sur Space lui donne simplement une impulsion verticale en plus
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         //Debug.Log(orientation.forward);
         //moveDirection = orientation.forward * verticalInput;
 
-
-        if (!grounded)
-        {
-            controller.Move(moveDirection.normalized * speed * airMultiplier * Time.deltaTime);
-        }
-        else
-        {
-            controller.Move(moveDirection.normalized * speed * Time.deltaTime);
-        }
-
+        controller.Move(moveDirection.normalized * speed * waterMultiplier * Time.deltaTime);
         controller.Move(velocity * Time.deltaTime);
 
     }
@@ -157,11 +174,14 @@ public class PlayerMovement : PlayerScript
     private void Jump()
     {
         velocity.y = Mathf.Sqrt(jumpHeight * -gravity);
+        // Faire en sorte de prendre la direction pour mettre une impulsion dans cette direction
+        jumpPressed = false;
     }
 
     private void JumpWater()
     {
-        velocity.y = Mathf.Sqrt(jumpHeight * 1f);
+        velocity.y = Mathf.Sqrt(jumpHeight * 1f / 2);
+        jumpPressed = false;
     }
 
     public void SetInWater(bool inWater)
