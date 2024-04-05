@@ -14,18 +14,20 @@ public class PlayerMovement : PlayerScript
     public float jumpHeight = 3f;
     public float minLongJumpTime;
     public float maxLongJumpTime;
+    private float timeJumpPressed = 0;
+    private bool releaseJump = false;
 
     public float gravity = -9.81f;
     public float airMultiplier;
     public float waterMultiplier;
 
-    private bool readyToJump;
+    //private bool readyToJump;
 
     private float horizontalInput;
     private float verticalInput;
 
-    private bool jumpPressed;
-    private float timeJumpPressed = 0;
+    //private bool jumpPressed;
+    
 
     public bool grounded;
     public bool inWater;
@@ -59,16 +61,6 @@ public class PlayerMovement : PlayerScript
 
         MyInput();
         //Debug.Log(timeJumpPressed);
-
-        if (grounded)
-        {
-            readyToJump = true;
-        }
-        else
-        {
-            readyToJump = false;
-            timeJumpPressed = 0;
-        }
     }
 
     private void FixedUpdate()
@@ -86,43 +78,42 @@ public class PlayerMovement : PlayerScript
 
     private void MyInput()
     {
+
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if(grounded)
+        if (Input.GetKey(KeyCode.Space))
         {
-            if (Input.GetKey(KeyCode.Space))
-            {
-                //Faire en sorte de bloquer les déplacement quand le joueur appuis sur espace (revoir l'archi du script)
-                timeJumpPressed += Time.deltaTime;
-            }
-
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-                if (timeJumpPressed > minLongJumpTime)
-                {
-                    jumpPressed = true;
-                }
-
-                timeJumpPressed = 0;
-            }
-        }
-        else
-        {
-            timeJumpPressed = 0;
+            //Faire en sorte de bloquer les déplacement quand le joueur appuis sur espace (revoir l'archi du script)
+            timeJumpPressed += Time.deltaTime;
         }
 
-       
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            releaseJump = true;
+        }
 
     }
 
     private void MovePlayer()
     {
 
-        if(readyToJump && grounded && jumpPressed)
+        if(releaseJump && grounded)
+        {
+            Jump();
+            releaseJump = false;
+            timeJumpPressed = 0;
+        }
+
+        /*if(readyToJump && grounded && jumpPressed)
         {
             readyToJump = false;
             Jump();
+        }*/
+
+        if(timeJumpPressed == 0)
+        {
+            Deplacement();
         }
 
         if (grounded && velocity.y < 0)
@@ -130,6 +121,14 @@ public class PlayerMovement : PlayerScript
             velocity.y = -2f;
         }
 
+        velocity.y += gravity * Time.deltaTime;
+
+        controller.Move(velocity * Time.deltaTime);
+    
+    }
+
+    private void Deplacement()
+    {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         if (!grounded)
@@ -140,16 +139,11 @@ public class PlayerMovement : PlayerScript
         {
             controller.Move(moveDirection.normalized * speed * Time.deltaTime);
         }
-
-        velocity.y += gravity * Time.deltaTime;
-
-        controller.Move(velocity * Time.deltaTime);
-    
     }
 
     private void MovePlayerWater()
     {
-        if (jumpPressed)
+        if (timeJumpPressed!=0)
         {
             JumpWater();
         }
@@ -175,13 +169,11 @@ public class PlayerMovement : PlayerScript
     {
         velocity.y = Mathf.Sqrt(jumpHeight * -gravity);
         // Faire en sorte de prendre la direction pour mettre une impulsion dans cette direction
-        jumpPressed = false;
     }
 
     private void JumpWater()
     {
         velocity.y = Mathf.Sqrt(jumpHeight * 1f / 2);
-        jumpPressed = false;
     }
 
     public void SetInWater(bool inWater)
