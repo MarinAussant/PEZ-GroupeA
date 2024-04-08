@@ -21928,7 +21928,7 @@ MonoBehaviour:
   minLongJumpTime: 1
   maxLongJumpTime: 0
   gravity: -5
-  airMultiplier: 0.9
+  airMultiplier: 0.2
   waterMultiplier: 1.2
   grounded: 0
   inWater: 0

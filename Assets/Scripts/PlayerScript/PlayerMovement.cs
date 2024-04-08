@@ -118,10 +118,28 @@ public class PlayerMovement : PlayerScript
 
         if (grounded && velocity.y < 0)
         {
-            velocity.y = -2f;
+            velocity.y = -1f;
         }
 
+        if(velocity.x > 0.1f || velocity.x < -0.1f)
+        {
+            velocity.x *= 0.93f;
+        }
+        else
+        {
+            velocity.x = 0f;
+        }
+        
         velocity.y += gravity * Time.deltaTime;
+
+        if (velocity.z > 0.1f || velocity.z < -0.1f)
+        {
+            velocity.z *= 0.93f;
+        }
+        else
+        {
+            velocity.z = 0f;
+        }
 
         controller.Move(velocity * Time.deltaTime);
     
@@ -130,6 +148,7 @@ public class PlayerMovement : PlayerScript
     private void Deplacement()
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        moveDirection.y = 0;
 
         if (!grounded)
         {
@@ -167,7 +186,10 @@ public class PlayerMovement : PlayerScript
 
     private void Jump()
     {
+        velocity = orientation.forward.normalized * 3;
         velocity.y = Mathf.Sqrt(jumpHeight * -gravity);
+
+        controller.Move(velocity * Time.deltaTime);
         // Faire en sorte de prendre la direction pour mettre une impulsion dans cette direction
     }
 
