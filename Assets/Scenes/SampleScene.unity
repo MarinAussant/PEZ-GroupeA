@@ -21901,7 +21901,7 @@ Transform:
   m_GameObject: {fileID: 1953485782}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.685944, z: -0, w: 0.7276543}
-  m_LocalPosition: {x: 31.607, y: 1.721, z: 0.306}
+  m_LocalPosition: {x: 32.9759, y: 2.389, z: 0.306}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -21924,7 +21924,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.7
-  jumpHeight: 0.4
+  jumpHeight: 0.15
   minLongJumpTime: 1
   maxLongJumpTime: 0
   gravity: -5
@@ -21935,7 +21935,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 8
-  groundDistance: 0.03
+  groundDistance: 0.01
   groundCheck: {fileID: 343310115}
   orientation: {fileID: 1212649973}
   controller: {fileID: 1953485786}
@@ -21960,9 +21960,9 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 0.14
-  m_Radius: 0.05
+  m_Radius: 0.02
   m_SlopeLimit: 15
-  m_StepOffset: 0.03
+  m_StepOffset: 0.01
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
