@@ -10,10 +10,10 @@ public class PlayerManager : MonoBehaviour
 
     private Dictionary<string,PlayerState> listState;
 
-    [SerializeField] private PlayerState inMovementState;
-    [SerializeField] private PlayerState loadingJumpState;
-    [SerializeField] private PlayerState inJumpState;
-    [SerializeField] private PlayerState inWaterState;
+    [SerializeField] private InMovementState inMovementState;
+    //[SerializeField] private PlayerState loadingJumpState;
+    //[SerializeField] private PlayerState inJumpState;
+    //[SerializeField] private PlayerState inWaterState;
 
     //[SerializeField] private PlayerState loadingJumpState;
 
@@ -26,9 +26,11 @@ public class PlayerManager : MonoBehaviour
 
         listState = new Dictionary<string,PlayerState>();
         listState.Add("inMovement",inMovementState);
-        listState.Add("loadingJumpState", loadingJumpState);
-        listState.Add("inJumpState", inJumpState);
-        listState.Add("inWaterState", inWaterState);
+        //listState.Add("loadingJump", loadingJumpState);
+        //listState.Add("inJump", inJumpState);
+        //listState.Add("inWater", inWaterState);
+        actualState = listState["inMovement"];
+        actualState.enterState();
     }
 
     private void FixedUpdate()
