@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InMovementState : PlayerState
+public class FallingState : PlayerState
 {
     // -----------  MovementInputs  -------------
     private float horizontalInput;
     private float verticalInput;
-    private float timeJumpPressed = 0f;
 
+    [Header("Falling Variables")]
 
-    [Header("Movement Variables")]
-
-    [SerializeField] private float speed;
+    [SerializeField] private float fallingWalkSpeed;
+    [SerializeField] private float gravity = -9.81f;
     [SerializeField] private Transform orientation;
     private Vector3 moveDirection;
     private Vector3 velocity;
@@ -28,9 +27,9 @@ public class InMovementState : PlayerState
 
     public override void enterState(PlayerManager context)
     {
-        Debug.Log("InMovementState");
+        Debug.Log("InFallingState");
         playerContext = context;
-        timeJumpPressed = 0f;
+        velocity.y = 0f;
     }
 
     public override void updateState()
@@ -39,6 +38,7 @@ public class InMovementState : PlayerState
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         MyInput();
+
         SwitchStateVerif();
 
     }
@@ -52,15 +52,8 @@ public class InMovementState : PlayerState
 
     private void MyInput()
     {
-
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
-
-        if (Input.GetKey(KeyCode.Space))
-        {
-            timeJumpPressed += Time.deltaTime;
-        }
-
     }
 
     private void MovePlayer()
@@ -68,9 +61,9 @@ public class InMovementState : PlayerState
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         moveDirection.y = 0;
 
-        playerContext.controller.Move(moveDirection.normalized * speed * Time.deltaTime);
+        playerContext.controller.Move(moveDirection.normalized * fallingWalkSpeed * Time.deltaTime);
 
-        velocity.y = -1f;
+        velocity.y += gravity * Time.deltaTime;
 
         playerContext.controller.Move(velocity * Time.deltaTime);
 
@@ -79,19 +72,9 @@ public class InMovementState : PlayerState
     protected override void SwitchStateVerif()
     {
 
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (grounded)
         {
-            playerContext.nextState("climbing");
-        }
-
-        if (timeJumpPressed > playerContext.timeToChargeJump)
-        {
-            playerContext.nextState("chargeJump");
-        }
-
-        if (!grounded)
-        {
-            playerContext.nextState("falling");
+            playerContext.nextState("inMovement");
         }
         
     }

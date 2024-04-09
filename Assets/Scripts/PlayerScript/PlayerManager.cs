@@ -6,42 +6,58 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
 
-    private PlayerState actualState;
+    [Header("Shared Component")]
+    public float timeToChargeJump;
+    public CharacterController controller;
 
+
+    private PlayerState actualState;
     private Dictionary<string,PlayerState> listState;
 
     [SerializeField] private InMovementState inMovementState;
-    //[SerializeField] private PlayerState loadingJumpState;
+    //[SerializeField] private PlayerState chargeJumpState;
+    [SerializeField] private PlayerState fallingState;
+    //[SerializeField] private PlayerState climbingState;
     //[SerializeField] private PlayerState inJumpState;
     //[SerializeField] private PlayerState inWaterState;
 
-    //[SerializeField] private PlayerState loadingJumpState;
+
 
 
 
     private void Start()
     {
 
-        // ----------  Initialisation des states  -------------
+        // ----------  Initialisation des states  ------------
 
         listState = new Dictionary<string,PlayerState>();
         listState.Add("inMovement",inMovementState);
-        //listState.Add("loadingJump", loadingJumpState);
+        //listState.Add("chargeJump", chargeJumpState);
+        listState.Add("falling", fallingState);
+        //listState.Add("climbing", climbingState);
+
+
+
         //listState.Add("inJump", inJumpState);
         //listState.Add("inWater", inWaterState);
         actualState = listState["inMovement"];
-        actualState.enterState();
+        actualState.enterState(this);
+    }
+
+    private void Update()
+    {
+        actualState.updateState();
     }
 
     private void FixedUpdate()
     {
-        actualState.updateState();    
+        actualState.fixedUpdateState();    
     }
 
     public void nextState(string nextState)
     {
         actualState.exitState();
         actualState = listState[nextState];
-        actualState.enterState();
+        actualState.enterState(this);
     }
 }
