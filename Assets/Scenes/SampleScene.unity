@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -644,6 +644,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.17252304, y: 0.6472704, z: 0.09397827}
   m_Center: {x: 0.08381417, y: 0.32291767, z: -0.044495344}
+--- !u!4 &94054383 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 955709426628959323, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
+  m_PrefabInstance: {fileID: 6661579850107543527}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &102014619 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1869004960016252962, guid: df7ec44708fbf364a8128383a31c88e1, type: 3}
@@ -13442,7 +13447,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fallingWalkSpeed: 0.5
-  gravity: -5
   orientation: {fileID: 1212649973}
   groundCheck: {fileID: 343310115}
   groundDistance: 0.01
@@ -13450,6 +13454,37 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   grounded: 0
+--- !u!114 &1953485794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953485782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1515e484b0ded3d478f1c77841ed5da8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeToChargeMax: 1.2
+  cameraOffset: {x: 0, y: -0.03, z: 0}
+--- !u!114 &1953485795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953485782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a855245f7e5e51c499a1ff15b6b6caeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: -9.81
+  orientation: {fileID: 1212649973}
+  maxJumpHeight: 0.15
+  maxJumpLenght: 3
+  timeToUncharge: 0.2
 --- !u!1 &1956342713 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7427219470401347508, guid: df7ec44708fbf364a8128383a31c88e1, type: 3}
@@ -14392,13 +14427,29 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2448211015584851700, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
+      propertyPath: gravity
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2448211015584851700, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
       propertyPath: controller
       value: 
       objectReference: {fileID: 1953485786}
     - target: {fileID: 2448211015584851700, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
+      propertyPath: inJumpState
+      value: 
+      objectReference: {fileID: 1953485795}
+    - target: {fileID: 2448211015584851700, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
       propertyPath: fallingState
       value: 
       objectReference: {fileID: 1953485789}
+    - target: {fileID: 2448211015584851700, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 94054383}
+    - target: {fileID: 2448211015584851700, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
+      propertyPath: chargeJumpState
+      value: 
+      objectReference: {fileID: 1953485794}
     - target: {fileID: 2448211015584851700, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
       propertyPath: timeToChargeJump
       value: 0.5
@@ -14425,7 +14476,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7333361921687506664, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 29.5783
+      value: 32.965
       objectReference: {fileID: 0}
     - target: {fileID: 7333361921687506664, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
       propertyPath: m_LocalPosition.y
@@ -14433,7 +14484,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7333361921687506664, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.5687
+      value: 0.683
       objectReference: {fileID: 0}
     - target: {fileID: 7333361921687506664, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
       propertyPath: m_LocalRotation.w
@@ -14474,6 +14525,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8775941322008838603, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1953485789}
+    - targetCorrespondingSourceObject: {fileID: 8775941322008838603, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1953485794}
+    - targetCorrespondingSourceObject: {fileID: 8775941322008838603, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1953485795}
   m_SourcePrefab: {fileID: 100100000, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

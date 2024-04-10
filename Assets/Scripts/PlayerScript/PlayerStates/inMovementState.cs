@@ -31,6 +31,8 @@ public class InMovementState : PlayerState
         Debug.Log("InMovementState");
         playerContext = context;
         timeJumpPressed = 0f;
+
+        playerContext.cameraTransform.localPosition = playerContext.initialCameraPosition;
     }
 
     public override void updateState()

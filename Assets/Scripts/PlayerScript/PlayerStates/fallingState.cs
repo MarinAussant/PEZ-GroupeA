@@ -12,7 +12,6 @@ public class FallingState : PlayerState
     [Header("Falling Variables")]
 
     [SerializeField] private float fallingWalkSpeed;
-    [SerializeField] private float gravity = -9.81f;
     [SerializeField] private Transform orientation;
     private Vector3 moveDirection;
     private Vector3 velocity;
@@ -30,6 +29,8 @@ public class FallingState : PlayerState
         Debug.Log("InFallingState");
         playerContext = context;
         velocity.y = 0f;
+
+        playerContext.cameraTransform.localPosition = playerContext.initialCameraPosition;
     }
 
     public override void updateState()
@@ -63,7 +64,7 @@ public class FallingState : PlayerState
 
         playerContext.controller.Move(moveDirection.normalized * fallingWalkSpeed * Time.deltaTime);
 
-        velocity.y += gravity * Time.deltaTime;
+        velocity.y += playerContext.gravity * Time.deltaTime;
 
         playerContext.controller.Move(velocity * Time.deltaTime);
 
