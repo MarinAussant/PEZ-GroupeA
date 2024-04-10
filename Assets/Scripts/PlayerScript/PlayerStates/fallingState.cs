@@ -19,18 +19,19 @@ public class FallingState : PlayerState
 
     [Header("Ground Check")]
 
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
-    public bool grounded;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private bool grounded;
 
     public override void enterState(PlayerManager context)
     {
         Debug.Log("InFallingState");
         playerContext = context;
+        velocity = playerContext.SharedVelocity;
         velocity.y = 0f;
 
-        playerContext.cameraTransform.localPosition = playerContext.initialCameraPosition;
+        playerContext.CameraTransform.localPosition = playerContext.InitialCameraPosition;
     }
 
     public override void updateState()
@@ -53,20 +54,23 @@ public class FallingState : PlayerState
 
     private void MyInput()
     {
+
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
+
     }
 
     private void MovePlayer()
     {
+
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         moveDirection.y = 0;
 
-        playerContext.controller.Move(moveDirection.normalized * fallingWalkSpeed * Time.deltaTime);
+        playerContext.Controller.Move(moveDirection.normalized * fallingWalkSpeed * Time.deltaTime);
 
-        velocity.y += playerContext.gravity * Time.deltaTime;
+        velocity.y += playerContext.Gravity * Time.deltaTime;
 
-        playerContext.controller.Move(velocity * Time.deltaTime);
+        playerContext.Controller.Move(velocity * Time.deltaTime);
 
     }
 
@@ -75,7 +79,9 @@ public class FallingState : PlayerState
 
         if (grounded)
         {
+
             playerContext.nextState("inMovement");
+
         }
         
     }

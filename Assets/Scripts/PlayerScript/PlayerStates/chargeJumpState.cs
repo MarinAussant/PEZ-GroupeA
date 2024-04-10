@@ -16,7 +16,6 @@ public class ChargeJumpState : PlayerState
     [Header("Charge Jump Variable")]
 
     [SerializeField] private float timeToChargeMax;
-    //[SerializeField] private Transform cameraTransorm;
     [SerializeField] private Vector3 cameraOffset;
 
     public override void enterState(PlayerManager context)
@@ -37,9 +36,9 @@ public class ChargeJumpState : PlayerState
 
     public override void fixedUpdateState()
     {
-        playerContext.cameraTransform.localPosition =  Vector3.Lerp(
-            playerContext.cameraTransform.localPosition,
-            playerContext.initialCameraPosition + cameraOffset,
+        playerContext.CameraTransform.localPosition =  Vector3.Lerp(
+            playerContext.CameraTransform.localPosition,
+            playerContext.InitialCameraPosition + cameraOffset,
             (timeJumpPressed / timeToChargeMax) * 8 * Time.deltaTime
         );
     }
@@ -70,11 +69,11 @@ public class ChargeJumpState : PlayerState
     {
         if(timeJumpPressed > timeToChargeMax)
         {
-            playerContext.actualPrctChargedJump = 1;
+            playerContext.ActualPrctChargedJump = 1;
         }
         else
         {
-            playerContext.actualPrctChargedJump = ((timeJumpPressed * 100) / timeToChargeMax) / 100;
+            playerContext.ActualPrctChargedJump = ((timeJumpPressed * 100) / timeToChargeMax) / 100;
         }
     }
 

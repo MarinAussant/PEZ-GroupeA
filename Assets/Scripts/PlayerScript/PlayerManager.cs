@@ -7,14 +7,53 @@ public class PlayerManager : MonoBehaviour
 {
 
     [Header("Shared Components & Variables")]
-    public float timeToChargeJump;
-    public CharacterController controller;
-    public float gravity;
-    public Transform cameraTransform;
 
-    [HideInInspector] public Vector3 initialCameraPosition;
-    [HideInInspector] public float actualPrctChargedJump;
+    [SerializeField] private float timeToChargeJump;
+    public float TimeToChargeJump
+    {
+        get { return timeToChargeJump; }
+        set { timeToChargeJump = value; }
+    }
 
+    [SerializeField] private CharacterController controller;
+    public CharacterController Controller
+    {
+        get { return controller; }
+    }
+
+    [SerializeField] private float gravity;
+    public float Gravity
+    {
+        get { return gravity; }
+    }
+
+    [SerializeField] private Transform cameraTransform;
+    public Transform CameraTransform
+    {
+        get { return cameraTransform; }
+        set { cameraTransform = value; }
+    }
+
+    private Vector3 initialCameraPosition;
+    public Vector3 InitialCameraPosition
+    {
+        get { return initialCameraPosition; }
+        set { initialCameraPosition = value; }
+    }
+
+    private float actualPrctChargedJump;
+    public float ActualPrctChargedJump
+    {
+        get { return actualPrctChargedJump; }
+        set { actualPrctChargedJump = value; }
+    }
+
+    private Vector3 sharedVelocity;
+    public Vector3 SharedVelocity
+    {
+        get { return sharedVelocity; }
+        set { sharedVelocity = value; }
+    }
 
 
     private PlayerState actualState;
@@ -66,4 +105,8 @@ public class PlayerManager : MonoBehaviour
         actualState = listState[nextState];
         actualState.enterState(this);
     }
+
+
+
+
 }

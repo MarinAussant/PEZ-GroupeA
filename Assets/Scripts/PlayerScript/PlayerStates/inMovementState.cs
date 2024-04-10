@@ -21,10 +21,10 @@ public class InMovementState : PlayerState
 
     [Header("Ground Check")]
 
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
-    public bool grounded;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private bool grounded;
 
     public override void enterState(PlayerManager context)
     {
@@ -32,7 +32,9 @@ public class InMovementState : PlayerState
         playerContext = context;
         timeJumpPressed = 0f;
 
-        playerContext.cameraTransform.localPosition = playerContext.initialCameraPosition;
+        playerContext.CameraTransform.localPosition = playerContext.InitialCameraPosition;
+
+        velocity = playerContext.SharedVelocity;
     }
 
     public override void updateState()
@@ -70,11 +72,11 @@ public class InMovementState : PlayerState
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         moveDirection.y = 0;
 
-        playerContext.controller.Move(moveDirection.normalized * speed * Time.deltaTime);
+        playerContext.Controller.Move(moveDirection.normalized * speed * Time.deltaTime);
 
         velocity.y = -1f;
 
-        playerContext.controller.Move(velocity * Time.deltaTime);
+        playerContext.Controller.Move(velocity * Time.deltaTime);
 
     }
 
@@ -86,7 +88,7 @@ public class InMovementState : PlayerState
             playerContext.nextState("climbing");
         }
 
-        if (timeJumpPressed > playerContext.timeToChargeJump)
+        if (timeJumpPressed > playerContext.TimeToChargeJump)
         {
             playerContext.nextState("chargeJump");
         }

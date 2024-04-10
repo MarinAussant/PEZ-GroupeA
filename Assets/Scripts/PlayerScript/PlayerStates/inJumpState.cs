@@ -37,9 +37,9 @@ public class InJumpState : PlayerState
 
         MovePlayer();
 
-        playerContext.cameraTransform.localPosition = Vector3.Lerp(
-            playerContext.cameraTransform.localPosition,
-            playerContext.initialCameraPosition,
+        playerContext.CameraTransform.localPosition = Vector3.Lerp(
+            playerContext.CameraTransform.localPosition,
+            playerContext.InitialCameraPosition,
             timeToUncharge * Time.deltaTime
         );
 
@@ -48,18 +48,18 @@ public class InJumpState : PlayerState
     private void MovePlayer()
     {
 
-        velocity.y += playerContext.gravity * Time.deltaTime;
+        velocity.y += playerContext.Gravity * Time.deltaTime;
 
-        playerContext.controller.Move(velocity * Time.deltaTime);
+        playerContext.Controller.Move(velocity * Time.deltaTime);
 
     }
 
     private void Jump()
     {
-        velocity = orientation.forward.normalized * playerContext.actualPrctChargedJump * maxJumpLenght;
-        velocity.y = Mathf.Sqrt(maxJumpHeight * playerContext.actualPrctChargedJump * -playerContext.gravity);
+        velocity = orientation.forward.normalized * playerContext.ActualPrctChargedJump * maxJumpLenght;
+        velocity.y = Mathf.Sqrt(maxJumpHeight * playerContext.ActualPrctChargedJump * -playerContext.Gravity);
 
-        playerContext.controller.Move(velocity * Time.deltaTime);
+        playerContext.Controller.Move(velocity * Time.deltaTime);
     }
 
     protected override void SwitchStateVerif()
@@ -74,7 +74,7 @@ public class InJumpState : PlayerState
 
     public override void exitState()
     {
-        
+        playerContext.SharedVelocity = velocity;
     }
 
 }

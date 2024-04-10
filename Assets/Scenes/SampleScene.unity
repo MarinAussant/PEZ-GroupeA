@@ -13466,7 +13466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1515e484b0ded3d478f1c77841ed5da8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToChargeMax: 1.2
+  timeToChargeMax: 1
   cameraOffset: {x: 0, y: -0.03, z: 0}
 --- !u!114 &1953485795
 MonoBehaviour:
@@ -13480,9 +13480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a855245f7e5e51c499a1ff15b6b6caeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: -9.81
   orientation: {fileID: 1212649973}
-  maxJumpHeight: 0.15
+  maxJumpHeight: 0.22
   maxJumpLenght: 3
   timeToUncharge: 0.2
 --- !u!1 &1956342713 stripped
@@ -14452,7 +14451,7 @@ PrefabInstance:
       objectReference: {fileID: 1953485794}
     - target: {fileID: 2448211015584851700, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
       propertyPath: timeToChargeJump
-      value: 0.5
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5443945162793725566, guid: c09328a1ac5d55745a831f2d6abd6196, type: 3}
       propertyPath: speed
