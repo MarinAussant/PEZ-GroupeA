@@ -9,11 +9,13 @@ public class InMovementState : PlayerState
     private float horizontalInput;
     private float verticalInput;
     private float timeJumpPressed = 0f;
+    private bool inWater;
 
 
     [Header("Movement Variables")]
 
     [SerializeField] private float speed;
+    [SerializeField] private float decelerationSpeed;
     [SerializeField] private Transform orientation;
     private Vector3 moveDirection;
     private Vector3 velocity;
@@ -32,9 +34,12 @@ public class InMovementState : PlayerState
         playerContext = context;
         timeJumpPressed = 0f;
 
+        inWater = false;
+
         playerContext.CameraTransform.localPosition = playerContext.InitialCameraPosition;
 
         velocity = playerContext.SharedVelocity;
+        playerContext.SharedVelocity = Vector3.zero;
     }
 
     public override void updateState()
@@ -43,6 +48,7 @@ public class InMovementState : PlayerState
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         MyInput();
+        Decelaration();
         SwitchStateVerif();
 
     }
@@ -80,29 +86,79 @@ public class InMovementState : PlayerState
 
     }
 
+    private void Decelaration()
+    {
+        if (velocity.x < -decelerationSpeed)
+        {
+            velocity.x += decelerationSpeed;
+        }
+        else if(velocity.x > decelerationSpeed)
+        {
+            velocity.x -= decelerationSpeed;
+        }
+        else
+        {
+            velocity.x = 0;
+        }
+
+        if (velocity.z < -decelerationSpeed)
+        {
+            velocity.z += decelerationSpeed;
+        }
+        else if (velocity.z > decelerationSpeed)
+        {
+            velocity.z -= decelerationSpeed;
+        }
+        else
+        {
+            velocity.z = 0;
+        }
+    }
+
     protected override void SwitchStateVerif()
     {
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
+
             playerContext.nextState("climbing");
+
         }
 
         if (timeJumpPressed > playerContext.TimeToChargeJump)
         {
+
             playerContext.nextState("chargeJump");
+
         }
 
         if (!grounded)
         {
+
             playerContext.nextState("falling");
+
         }
-        
+
+        if (inWater)
+        {
+
+            playerContext.nextState("inWater");
+
+        }
+
     }
 
     public override void exitState()
     {
         
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Water")
+        {
+            inWater = true;
+        }
     }
 
 }

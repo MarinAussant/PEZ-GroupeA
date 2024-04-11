@@ -55,7 +55,7 @@ public class PlayerManager : MonoBehaviour
         set { sharedVelocity = value; }
     }
 
-
+    // --------------- Player States ------------------
     private PlayerState actualState;
     private Dictionary<string,PlayerState> listState;
 
@@ -64,7 +64,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private PlayerState fallingState;
     //[SerializeField] private PlayerState climbingState;
     [SerializeField] private PlayerState inJumpState;
-    //[SerializeField] private PlayerState inWaterState;
+    [SerializeField] private PlayerState inWaterState;
+    [SerializeField] private PlayerState waterJumpState;
 
 
 
@@ -83,7 +84,8 @@ public class PlayerManager : MonoBehaviour
         listState.Add("falling", fallingState);
         //listState.Add("climbing", climbingState);
         listState.Add("inJump", inJumpState);
-        //listState.Add("inWater", inWaterState);
+        listState.Add("inWater", inWaterState);
+        listState.Add("waterJump", waterJumpState);
 
         actualState = listState["inMovement"];
         actualState.enterState(this);

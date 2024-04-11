@@ -8,41 +8,38 @@ public class InWaterState : PlayerState
     // -----------  MovementInputs  -------------
     private float horizontalInput;
     private float verticalInput;
-    private float timeJumpPressed = 0f;
+    private bool jumpInput;
+    private bool inWater;
 
 
-    [Header("Movement Variables")]
-
-    [SerializeField] private float speed;
+    [Header("Water Variables")]
+    [SerializeField] private float waterGravity;
+    [SerializeField] private float waterSpeed;
+    [SerializeField] private float decelerationSpeed;
+    [SerializeField] private float waterDiveUpSpeed;
     [SerializeField] private Transform orientation;
     private Vector3 moveDirection;
     private Vector3 velocity;
 
 
-    [Header("Ground Check")]
-
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private float groundDistance = 0.4f;
-    [SerializeField] private LayerMask groundMask;
-    [SerializeField] private bool grounded;
-
     public override void enterState(PlayerManager context)
     {
-        Debug.Log("InMovementState");
+        Debug.Log("InWater");
         playerContext = context;
-        timeJumpPressed = 0f;
+        inWater = true;
 
         playerContext.CameraTransform.localPosition = playerContext.InitialCameraPosition;
 
         velocity = playerContext.SharedVelocity;
+        //playerContext.SharedVelocity = Vector3.zero;
+
     }
 
     public override void updateState()
     {
 
-        grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
         MyInput();
+        Decelaration();
         SwitchStateVerif();
 
     }
@@ -62,47 +59,105 @@ public class InWaterState : PlayerState
 
         if (Input.GetKey(KeyCode.Space))
         {
-            timeJumpPressed += Time.deltaTime;
+            jumpInput = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            jumpInput = false;
         }
 
     }
 
     private void MovePlayer()
     {
+        if (jumpInput)
+        {
+            JumpWater();
+        }
+
+        if (velocity.y > -waterGravity)
+        {
+            velocity.y -= 0.1f;
+        }
+        else if (velocity.y < -waterGravity)
+        {
+            velocity.y += 0.1f;
+        }
+        else 
+        {
+            velocity.y = -waterGravity;
+        }
+
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-        moveDirection.y = 0;
 
-        playerContext.Controller.Move(moveDirection.normalized * speed * Time.deltaTime);
-
-        velocity.y = -1f;
-
+        playerContext.Controller.Move(moveDirection.normalized * waterSpeed * Time.deltaTime);
         playerContext.Controller.Move(velocity * Time.deltaTime);
 
+    }
+
+    private void JumpWater()
+    {
+        if (velocity.y < waterDiveUpSpeed)
+        {
+            velocity.y += Mathf.Sqrt(waterDiveUpSpeed);
+        }
+        
+    }
+
+    private void Decelaration()
+    {
+        if (velocity.x < -decelerationSpeed)
+        {
+            velocity.x += decelerationSpeed;
+        }
+        else if (velocity.x > decelerationSpeed)
+        {
+            velocity.x -= decelerationSpeed;
+        }
+        else
+        {
+            velocity.x = 0;
+        }
+
+        if (velocity.z < -decelerationSpeed)
+        {
+            velocity.z += decelerationSpeed;
+        }
+        else if (velocity.z > decelerationSpeed)
+        {
+            velocity.z -= decelerationSpeed;
+        }
+        else
+        {
+            velocity.z = 0;
+        }
     }
 
     protected override void SwitchStateVerif()
     {
 
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (!inWater)
         {
-            playerContext.nextState("climbing");
-        }
 
-        if (timeJumpPressed > playerContext.TimeToChargeJump)
-        {
-            playerContext.nextState("chargeJump");
-        }
+            playerContext.ActualPrctChargedJump = 0.5f;
+            playerContext.nextState("waterJump");
 
-        if (!grounded)
-        {
-            playerContext.nextState("falling");
         }
         
     }
 
     public override void exitState()
     {
-        
+        jumpInput = false;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Water")
+        {
+            inWater = false;
+        }
     }
 
 }

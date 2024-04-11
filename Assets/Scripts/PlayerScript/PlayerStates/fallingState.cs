@@ -8,10 +8,12 @@ public class FallingState : PlayerState
     // -----------  MovementInputs  -------------
     private float horizontalInput;
     private float verticalInput;
+    private bool inWater;
 
     [Header("Falling Variables")]
 
     [SerializeField] private float fallingWalkSpeed;
+    [SerializeField] private float decelerationSpeed;
     [SerializeField] private Transform orientation;
     private Vector3 moveDirection;
     private Vector3 velocity;
@@ -28,6 +30,9 @@ public class FallingState : PlayerState
     {
         Debug.Log("InFallingState");
         playerContext = context;
+
+        inWater = false;
+
         velocity = playerContext.SharedVelocity;
         velocity.y = 0f;
 
@@ -40,7 +45,7 @@ public class FallingState : PlayerState
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         MyInput();
-
+        Decelaration();
         SwitchStateVerif();
 
     }
@@ -74,6 +79,35 @@ public class FallingState : PlayerState
 
     }
 
+    private void Decelaration()
+    {
+        if (velocity.x < -decelerationSpeed)
+        {
+            velocity.x += decelerationSpeed;
+        }
+        else if (velocity.x > decelerationSpeed)
+        {
+            velocity.x -= decelerationSpeed;
+        }
+        else
+        {
+            velocity.x = 0;
+        }
+
+        if (velocity.z < -decelerationSpeed)
+        {
+            velocity.z += decelerationSpeed;
+        }
+        else if (velocity.z > decelerationSpeed)
+        {
+            velocity.z -= decelerationSpeed;
+        }
+        else
+        {
+            velocity.z = 0;
+        }
+    }
+
     protected override void SwitchStateVerif()
     {
 
@@ -83,12 +117,27 @@ public class FallingState : PlayerState
             playerContext.nextState("inMovement");
 
         }
-        
+
+        if (inWater)
+        {
+
+            playerContext.nextState("inWater");
+
+        }
+
     }
 
     public override void exitState()
     {
-        
+        playerContext.SharedVelocity = velocity;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Water")
+        {
+            inWater = true;
+        }
     }
 
 }
