@@ -34,6 +34,13 @@ public class PlayerManager : MonoBehaviour
         set { cameraTransform = value; }
     }
 
+    private Transform targetPoint;
+    public Transform TargetPoint
+    {
+        get { return targetPoint; }
+        set { targetPoint = value; }
+    }
+
     private Vector3 initialCameraPosition;
     public Vector3 InitialCameraPosition
     {
@@ -62,7 +69,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private PlayerState inMovementState;
     [SerializeField] private PlayerState chargeJumpState;
     [SerializeField] private PlayerState fallingState;
-    //[SerializeField] private PlayerState climbingState;
+    [SerializeField] private PlayerState climbingState;
     [SerializeField] private PlayerState inJumpState;
     [SerializeField] private PlayerState inWaterState;
     [SerializeField] private PlayerState waterJumpState;
@@ -82,7 +89,7 @@ public class PlayerManager : MonoBehaviour
         listState.Add("inMovement",inMovementState);
         listState.Add("chargeJump", chargeJumpState);
         listState.Add("falling", fallingState);
-        //listState.Add("climbing", climbingState);
+        listState.Add("climbing", climbingState);
         listState.Add("inJump", inJumpState);
         listState.Add("inWater", inWaterState);
         listState.Add("waterJump", waterJumpState);

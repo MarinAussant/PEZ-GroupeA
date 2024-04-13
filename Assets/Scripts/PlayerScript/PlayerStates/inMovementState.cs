@@ -120,8 +120,17 @@ public class InMovementState : PlayerState
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
+            if (Physics.Raycast(playerContext.CameraTransform.position, orientation.forward, out var hit, 0.10f))
+            {
 
-            playerContext.nextState("climbing");
+                if (hit.collider.gameObject.tag == "ClimbingTarget")
+                {
+                    playerContext.TargetPoint = hit.collider.gameObject.transform;
+                    playerContext.nextState("climbing");
+                }
+            }
+
+            timeJumpPressed = 0f;
 
         }
 
@@ -150,7 +159,7 @@ public class InMovementState : PlayerState
 
     public override void exitState()
     {
-        
+        timeJumpPressed = 0f;
     }
 
     private void OnTriggerEnter(Collider other)

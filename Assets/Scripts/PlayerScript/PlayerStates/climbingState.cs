@@ -10,13 +10,20 @@ public class ClimbingState : PlayerState
     private float verticalInput;
 
     [Header("Climbing Variables")]
-
+    /*
     [SerializeField] private Transform orientation;
     [SerializeField] private float fallingWalkSpeed;
     [SerializeField] private float maxJumpHeight;
-    private Vector3 moveDirection;
+    */
+    //private Vector3 moveDirection;
     private Vector3 velocity;
 
+    [Header("Ground Check")]
+
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private bool grounded;
 
     public override void enterState(PlayerManager context)
     {
@@ -24,13 +31,15 @@ public class ClimbingState : PlayerState
         playerContext = context;
         velocity.y = 0f;
 
-        Jump();
+        //Jump();
     }
 
     public override void updateState()
     {
-
-        MyInput();
+        if(velocity.y < 0f)
+        {
+            grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        }
         SwitchStateVerif();
 
     }
@@ -42,48 +51,52 @@ public class ClimbingState : PlayerState
 
     }
 
-    private void MyInput()
-    {
-
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
-
-    }
 
     private void MovePlayer()
     {
 
-        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-        moveDirection.y = 0;
+        //moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        //moveDirection.y = 0;
 
-        playerContext.Controller.Move(moveDirection.normalized * fallingWalkSpeed * Time.deltaTime);
+        //playerContext.Controller.Move(moveDirection.normalized * fallingWalkSpeed * Time.deltaTime);
 
-        velocity.y += playerContext.Gravity * Time.deltaTime;
+        float antigravity = 0.02f;
+        float deltaY = (playerContext.TargetPoint.position.y - playerContext.CameraTransform.position.y) / 2;
+
+        velocity.x = (playerContext.TargetPoint.position.x - playerContext.CameraTransform.position.x) * 2;
+        velocity.z = (playerContext.TargetPoint.position.z - playerContext.CameraTransform.position.z) * 2;
+
+        velocity.y += antigravity + deltaY;
 
         playerContext.Controller.Move(velocity * Time.deltaTime);
 
     }
-
+    /*
     private void Jump()
     {
         velocity.y = Mathf.Sqrt(maxJumpHeight * -playerContext.Gravity);
 
         playerContext.Controller.Move(velocity * Time.deltaTime);
     }
+    */
 
     protected override void SwitchStateVerif()
     {
 
-        if(velocity.y < 0)
+        if (grounded)
         {
-            playerContext.nextState("falling");
+
+            playerContext.nextState("inMovement");
+
         }
-            
+
     }
 
     public override void exitState()
     {
         playerContext.SharedVelocity = velocity;
+        playerContext.TargetPoint = null;
+        grounded = false;
     }
 
 }
