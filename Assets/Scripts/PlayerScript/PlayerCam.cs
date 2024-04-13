@@ -16,6 +16,9 @@ public class PlayerCam : PlayerScript
     public bool isInterractable = false;
     public InteractiveObject intObject=null;
     public bool interracting = false;
+    public GameObject lastHit;
+
+    public UIManager ui;
 
     // Start is called before the first frame update
     void Start()
@@ -26,8 +29,8 @@ public class PlayerCam : PlayerScript
 
     // Update is called once per frame
     void Update()
-    {
-;        float mouseX = Input.GetAxisRaw("Mouse X") * sensX * Time.deltaTime;
+    {             
+;       float mouseX = Input.GetAxisRaw("Mouse X") * sensX * Time.deltaTime;
         float mouseY = Input.GetAxisRaw("Mouse Y") * sensY * Time.deltaTime;
 
         yRotation += mouseX;
@@ -46,14 +49,31 @@ public class PlayerCam : PlayerScript
             {
                 if (hit.transform.gameObject.TryGetComponent(typeof(InteractiveObject), out Component component))
                 {
-                    intObject = hit.transform.gameObject.GetComponent<InteractiveObject>();
+                    lastHit = hit.transform.gameObject;
+                    intObject = lastHit.GetComponent<InteractiveObject>();
                     isInterractable = true;
+                    lastHit.GetComponent<Highlight>().ToggleHighlight(true);
+
+                    ui.text.text = intObject.text;
+                    ui.image.sprite = intObject.image;
+                    ui.show();
+                    
                 }
+                else
+                {
+                    isInterractable = false;
+                }
+            }
+            if (lastHit != null && Vector3.Distance(transform.position, lastHit.transform.position) >= 2)
+            {
+                lastHit.GetComponent<Highlight>().ToggleHighlight(false);
+                lastHit = null;
+                ui.hide();
             }
         }
         
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
             if (isInterractable && interracting==false)
             {
@@ -62,5 +82,4 @@ public class PlayerCam : PlayerScript
             }
         }
     }
-    
 }
