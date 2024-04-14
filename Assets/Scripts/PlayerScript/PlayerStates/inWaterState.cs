@@ -89,7 +89,7 @@ public class InWaterState : PlayerState
             velocity.y = -waterGravity;
         }
 
-        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        moveDirection = Camera.main.transform.forward * verticalInput + orientation.right * horizontalInput;
 
         playerContext.Controller.Move(moveDirection.normalized * waterSpeed * Time.deltaTime);
         playerContext.Controller.Move(velocity * Time.deltaTime);

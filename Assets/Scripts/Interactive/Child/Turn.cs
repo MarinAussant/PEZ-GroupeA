@@ -36,6 +36,8 @@ public class Turn : InteractiveObject
 
     public override void Interact()
     {
+
+        Debug.Log("InteractionTurn");
         if (Input.GetMouseButton(0))
         {
             active = true;

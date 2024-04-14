@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Water
   - ClimbingTarget
+  - BouchonEvier
   layers:
   - Default
   - TransparentFX

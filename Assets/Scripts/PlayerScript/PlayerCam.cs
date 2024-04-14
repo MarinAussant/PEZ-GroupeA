@@ -44,7 +44,7 @@ public class PlayerCam : PlayerScript
 
         if (interracting==false)
         {
-            Debug.DrawLine(transform.position, transform.position + transform.forward * 1.5f, Color.red);
+            //Debug.DrawLine(transform.position, transform.position + transform.forward * 1.5f, Color.red);
             if (Physics.Raycast(transform.position, transform.forward, out var hit, 1.5f))
             {
                 if (hit.transform.gameObject.TryGetComponent(typeof(InteractiveObject), out Component component))
@@ -73,7 +73,7 @@ public class PlayerCam : PlayerScript
         }
         
 
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.R))
         {
             if (isInterractable && interracting==false)
             {
