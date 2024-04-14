@@ -64,7 +64,7 @@ public class PlayerCam : PlayerScript
                     isInterractable = false;
                 }
             }
-            if (lastHit != null && Vector3.Distance(transform.position, lastHit.transform.position) >= 2)
+            if (lastHit != null && Vector3.Distance(transform.position, lastHit.transform.position) >= 0.5)
             {
                 lastHit.GetComponent<Highlight>().ToggleHighlight(false);
                 lastHit = null;

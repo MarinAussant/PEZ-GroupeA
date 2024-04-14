@@ -185,6 +185,11 @@ MonoBehaviour:
   sensX: 1000
   sensY: 1000
   orientation: {fileID: 1826177876497713936}
+  isInterractable: 0
+  intObject: {fileID: 0}
+  interracting: 0
+  lastHit: {fileID: 0}
+  ui: {fileID: 0}
 --- !u!1 &8684813028739085255
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,6 +265,12 @@ GameObject:
   - component: {fileID: 340033053158403123}
   - component: {fileID: 2448211015584851700}
   - component: {fileID: 5443945162793725566}
+  - component: {fileID: 8823765477219432734}
+  - component: {fileID: 3581444697373716979}
+  - component: {fileID: 4753952802459460554}
+  - component: {fileID: 5389334903834007049}
+  - component: {fileID: 911757104048524268}
+  - component: {fileID: 8649728771831730411}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -275,7 +286,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8775941322008838603}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.685944, z: -0, w: 0.7276543}
+  m_LocalRotation: {x: 0, y: 0.6859454, z: 0, w: 0.7276531}
   m_LocalPosition: {x: 32.9759, y: 2.389, z: 0.306}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -308,7 +319,7 @@ CharacterController:
   m_Height: 0.14
   m_Radius: 0.02
   m_SlopeLimit: 15
-  m_StepOffset: 0.01
+  m_StepOffset: 0.03
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
@@ -319,7 +330,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8775941322008838603}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b68541c660e2f3048b05feedcaca5335, type: 3}
   m_Name: 
@@ -353,7 +364,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6836b732734316440b6bb96a5ba9a009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeToChargeJump: 0.25
+  controller: {fileID: 8443886753661365556}
+  gravity: -5
+  cameraTransform: {fileID: 955709426628959323}
   inMovementState: {fileID: 5443945162793725566}
+  chargeJumpState: {fileID: 3581444697373716979}
+  fallingState: {fileID: 8823765477219432734}
+  climbingState: {fileID: 8649728771831730411}
+  inJumpState: {fileID: 4753952802459460554}
+  inWaterState: {fileID: 5389334903834007049}
+  waterJumpState: {fileID: 911757104048524268}
 --- !u!114 &5443945162793725566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,3 +387,113 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf605a76d59730b4faba5ab0a08351af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0.7
+  decelerationSpeed: 0.03
+  orientation: {fileID: 1826177876497713936}
+  groundCheck: {fileID: 3906320034054831657}
+  groundDistance: 0.01
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
+  grounded: 0
+--- !u!114 &8823765477219432734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775941322008838603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 684d9c8539037b14d90fa8c6095e4de9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fallingWalkSpeed: 0.5
+  decelerationSpeed: 0.03
+  orientation: {fileID: 1826177876497713936}
+  groundCheck: {fileID: 3906320034054831657}
+  groundDistance: 0.01
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
+  grounded: 0
+--- !u!114 &3581444697373716979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775941322008838603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1515e484b0ded3d478f1c77841ed5da8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeToChargeMax: 1
+  cameraOffset: {x: 0, y: -0.03, z: 0}
+--- !u!114 &4753952802459460554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775941322008838603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a855245f7e5e51c499a1ff15b6b6caeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orientation: {fileID: 1826177876497713936}
+  maxJumpHeight: 0.17
+  maxJumpLenght: 2.1
+  timeToUncharge: 0.2
+--- !u!114 &5389334903834007049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775941322008838603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6bdca1bc3fcaab498a864ae0676d3ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waterGravity: 0.5
+  waterSpeed: 1
+  decelerationSpeed: 0.01
+  waterDiveUpSpeed: 0.5
+  orientation: {fileID: 1826177876497713936}
+--- !u!114 &911757104048524268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775941322008838603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4785004ca8bca04db2834f1269c66f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orientation: {fileID: 1826177876497713936}
+  fallingWalkSpeed: 0.5
+  maxJumpHeight: 0.5
+--- !u!114 &8649728771831730411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775941322008838603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25eaf68c8831191429ed98c1726fb52c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundCheck: {fileID: 3906320034054831657}
+  groundDistance: 0.01
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
+  grounded: 0
