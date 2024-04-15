@@ -49,6 +49,7 @@ public class PlayerCam : PlayerScript
             {
                 if (hit.transform.gameObject.TryGetComponent(typeof(InteractiveObject), out Component component))
                 {
+                    
                     lastHit = hit.transform.gameObject;
                     intObject = lastHit.GetComponent<InteractiveObject>();
                     isInterractable = true;

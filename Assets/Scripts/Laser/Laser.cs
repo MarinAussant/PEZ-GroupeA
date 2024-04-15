@@ -8,6 +8,7 @@ public class Laser : MonoBehaviour
 {
     [Header("Settings")]
     public LayerMask mirorMask;
+    public LayerMask detectorMask;
     public float defaultLenght = 20;
     public int numOfReflections = 2;
 
@@ -46,6 +47,17 @@ public class Laser : MonoBehaviour
                 remainLenght -= Vector3.Distance(ray.origin, hit.point);
 
                 ray = new Ray(hit.point, Vector3.Reflect(ray.direction, hit.normal));
+            }
+            else if (Physics.Raycast(ray.origin, ray.direction, out hit, remainLenght, detectorMask))
+            {
+                hit.transform.gameObject.GetComponent<DetecteurLaser>().Activation();
+                lineRenderer.positionCount += 1;
+                lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point);
+            }
+            else if (Physics.Raycast(ray.origin, ray.direction, out hit, remainLenght))
+            {
+                lineRenderer.positionCount += 1;
+                lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point);
             }
             else
             {
