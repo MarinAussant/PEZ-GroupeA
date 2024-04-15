@@ -6,6 +6,7 @@ public class Button : InteractiveObject
 {
     public int id;
     private ButtonManager buttonManager;
+    private bool isActivate = false;
 
 
     void Start()
@@ -18,8 +19,26 @@ public class Button : InteractiveObject
     }
     public override void Interact()
     {
-        buttonManager.list.Add(id);
-        cam.interracting = false;
+        if(!isActivate)
+        {
+            buttonManager.list.Add(id);
+            PressButton();
+            cam.interracting = false;
+            isActivate = true;
+        }
 
+    }
+
+    private void PressButton()
+    {
+        transform.position = new Vector3(transform.position.x, transform.position.y - 0.02f, transform.position.z);
+        GetComponent<MeshRenderer>().material.SetColor("_Color",Color.black);
+    }
+
+    public void ResetButton()
+    {
+        transform.position = new Vector3(transform.position.x, transform.position.y + 0.02f, transform.position.z);
+        GetComponent<MeshRenderer>().material.SetColor("_Color", Color.white);
+        isActivate = false;
     }
 }

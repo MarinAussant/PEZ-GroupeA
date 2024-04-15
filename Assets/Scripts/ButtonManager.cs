@@ -22,7 +22,6 @@ public class ButtonManager : MonoBehaviour
 
     void Update()
     {
-        print(list);
         check();
     }
 
@@ -30,11 +29,35 @@ public class ButtonManager : MonoBehaviour
     {
         if (list.Count >= 8)
         {
-            if(list == goodList)
+            bool listEqual = true;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i] != goodList[i])
+                {
+                    listEqual = false;
+                }
+            }
+
+            if(listEqual)
             {
                 Destroy(door);
             }
-            list.Clear();
+            else
+            {
+                list.Clear();
+                ResetButton();
+            }
+            
+
+        }
+    }
+
+    private void ResetButton()
+    {
+        foreach (Button but in GetComponentsInChildren<Button>())
+        {
+            but.ResetButton();
         }
     }
 
