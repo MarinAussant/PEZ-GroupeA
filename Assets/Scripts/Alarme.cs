@@ -9,6 +9,7 @@ public class Alarme : MonoBehaviour
 
     [SerializeField] public Light alarmeLight;
     [SerializeField] private float flashSpeed;
+    private bool isOff = false;
 
     void Start()
     {
@@ -28,7 +29,15 @@ public class Alarme : MonoBehaviour
 
         alarmeLight.intensity = 1f;
         yield return new WaitForSeconds(flashSpeed);
-        StartCoroutine(RedAlarmeCycleDeux());
+
+        if (!isOff)
+        {
+            StartCoroutine(RedAlarmeCycleDeux());
+        }
+        else
+        {
+            TurnOff();
+        }
 
     }
 
@@ -43,14 +52,27 @@ public class Alarme : MonoBehaviour
         */
         alarmeLight.intensity = 15f;
         yield return new WaitForSeconds(flashSpeed);
-        StartCoroutine(RedAlarmeCycleUn());
+
+        if (!isOff)
+        {
+            StartCoroutine(RedAlarmeCycleUn());
+        }
+        else
+        {
+            TurnOff();
+        }
 
     }
 
-    public void TurnOff()
+    private void TurnOff()
     {
         alarmeLight.intensity = 0f;
         GetComponent<MeshRenderer>().material.DisableKeyword("_EmissionColor");
+    }
+
+    public void Desactivate()
+    {
+        isOff = true;
     }
 
 }
