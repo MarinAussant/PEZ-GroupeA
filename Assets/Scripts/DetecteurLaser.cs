@@ -22,12 +22,33 @@ public class DetecteurLaser : MonoBehaviour
                 }
                 if (id == 1)
                 {
-
+                    StartCoroutine(OpenTrap());
                 }
                 alreadyActivate = true;
             }
         }
 
+    }
+
+    public IEnumerator OpenTrap()
+    {
+        float timeStamp = 0f;
+        Quaternion rotationActuelle = cage.transform.rotation;
+
+        while (timeStamp < 3)
+        {
+            cage.transform.rotation = Quaternion.Lerp(
+                rotationActuelle,
+                Quaternion.Euler(45,0,0),
+                timeStamp / 3
+            );
+
+
+            timeStamp += Time.deltaTime;
+
+            yield return null;
+
+        }
     }
 
 
