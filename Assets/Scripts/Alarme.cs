@@ -66,8 +66,8 @@ public class Alarme : MonoBehaviour
 
     private void TurnOff()
     {
-        alarmeLight.intensity = 0f;
-        GetComponent<MeshRenderer>().material.DisableKeyword("_EmissionColor");
+        alarmeLight.intensity = 15f;
+        //GetComponent<MeshRenderer>().material.DisableKeyword("_EmissionColor");
     }
 
     public void Desactivate()

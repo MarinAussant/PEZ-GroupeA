@@ -46,8 +46,8 @@ public class CutRope2 : InteractiveObject
     private void Activate()
     {
         deliverObject.AddComponent<Rigidbody>();
-        deliverObject.GetComponent<Rigidbody>().mass = 4f;
-        deliverObject.GetComponent<Rigidbody>().drag = 4f;
+        deliverObject.GetComponent<Rigidbody>().mass = 1f;
+        deliverObject.GetComponent<Rigidbody>().drag = 2f;
         deliverObject.GetComponent<Rigidbody>().freezeRotation = true;
 
         deliverObject.AddComponent<Push>();

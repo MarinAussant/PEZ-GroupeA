@@ -9,6 +9,8 @@ public class WaterJumpState : PlayerState
     private float horizontalInput;
     private float verticalInput;
 
+    private bool inWater;
+
     [Header("Water Jump Variables")]
 
     [SerializeField] private Transform orientation;
@@ -23,6 +25,8 @@ public class WaterJumpState : PlayerState
         Debug.Log("WaterJumpState");
         playerContext = context;
         velocity.y = 0f;
+
+        inWater = false;
 
         Jump();
     }
@@ -78,12 +82,27 @@ public class WaterJumpState : PlayerState
         {
             playerContext.nextState("falling");
         }
-            
+
+        if (inWater)
+        {
+
+            playerContext.nextState("inWater");
+
+        }
+
     }
 
     public override void exitState()
     {
         playerContext.SharedVelocity = velocity;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Water")
+        {
+            inWater = true;
+        }
     }
 
 }

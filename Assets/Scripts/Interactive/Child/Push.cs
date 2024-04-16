@@ -58,7 +58,7 @@ public class Push : InteractiveObject
 
     private void push()
     {
-        rig.AddForce(vector * pushPower);
+        rig.AddForce(vector * pushPower * 80 * Time.deltaTime);
 
 
         if (activePush && Input.GetMouseButtonUp(0))
@@ -70,7 +70,7 @@ public class Push : InteractiveObject
 
     private void pull()
     {
-        rig.AddForce(vector * -pushPower);
+        rig.AddForce(vector * -pushPower * 80 * Time.deltaTime);
 
         if (activePull && Input.GetMouseButtonUp(1))
         {

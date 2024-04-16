@@ -90,11 +90,11 @@ public class InMovementState : PlayerState
     {
         if (velocity.x < -decelerationSpeed)
         {
-            velocity.x += decelerationSpeed;
+            velocity.x += decelerationSpeed * Time.deltaTime;
         }
         else if(velocity.x > decelerationSpeed)
         {
-            velocity.x -= decelerationSpeed;
+            velocity.x -= decelerationSpeed * Time.deltaTime;
         }
         else
         {
@@ -103,11 +103,11 @@ public class InMovementState : PlayerState
 
         if (velocity.z < -decelerationSpeed)
         {
-            velocity.z += decelerationSpeed;
+            velocity.z += decelerationSpeed * Time.deltaTime;
         }
         else if (velocity.z > decelerationSpeed)
         {
-            velocity.z -= decelerationSpeed;
+            velocity.z -= decelerationSpeed * Time.deltaTime;
         }
         else
         {

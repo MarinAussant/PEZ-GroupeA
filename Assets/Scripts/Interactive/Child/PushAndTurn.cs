@@ -68,7 +68,7 @@ public class PushAndTurn : InteractiveObject
 
     private void push()
     {
-        rig.AddForce(vector * pushPower);
+        rig.AddForce(vector * pushPower * 500 * Time.deltaTime);
 
 
         if (activePush && Input.GetMouseButtonUp(0))
@@ -80,7 +80,7 @@ public class PushAndTurn : InteractiveObject
 
     private void pull()
     {
-        rig.AddForce(vector * -pushPower);
+        rig.AddForce(vector * -pushPower * 500 * Time.deltaTime);
 
         if (activePull && Input.GetMouseButtonUp(1))
         {
@@ -91,7 +91,7 @@ public class PushAndTurn : InteractiveObject
 
     private void turn()
     {
-        transform.Rotate(0, 0.08f, 0);
+        transform.Rotate(0, 50.00f * Time.deltaTime, 0);
 
         if (activeTurn && Input.GetKeyUp(KeyCode.R))
         {
